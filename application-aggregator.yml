@@ -1,0 +1,72 @@
+server:
+  port: 9992
+  servlet:
+    context-path: /aggregator
+
+spring:
+  #primary:
+    #datasource:
+    #url: jdbc:mysql://localhost:3306/rep
+    #username: eirapp1
+    #password: 31Rlab^pp1
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #database-platform: org.hibernate.dialect.MySQL8Dialect
+  serverIp: eir-l1
+  secondary:
+    datasource:
+       required: false
+        #url: jdbc:mysql://10.100.2.237:3306/rep
+        #username: eirapp2
+        #password: E!rlab@pp2
+        #driver-class-name: com.mysql.cj.jdbc.Driver
+        #database-platform: org.hibernate.dialect.MySQL8Dialect
+        #serverIp: eir-l2
+        #sysconfig:
+        #datasource:
+        #url: jdbc:mysql://localhost:3306/app
+        #username: eirapp1
+        #password: 31Rlab^pp1
+        #driver-class-name: com.mysql.cj.jdbc.Driver
+        #database-platform: org.hibernate.dialect.MySQL8Dialect
+  jpa:
+    hibernate:
+      show-sql: true
+      ddl-auto: none
+
+scheduler:
+  hourly:
+#    cronjob: "0 0 1 * * *"
+    cronjob: "0 10 * * * *"
+    # SECOND, MIN , HOUR , DAY(Month) , Month , DAY (Week) 1-Monday and 7-Sunday
+  provision:
+    cronjob: "0 30 0 * * *"
+aggregate-count-mode:
+  file-mode: false
+  db-mode: true
+
+jasypt:
+  encryptor:
+    password: eir
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+files:
+  edr-files-folder: /u02/eirdata/ra/input
+  edr-move-folder: /u02/eirdata/ra/move_aggregated
+  edr-aggregate-folder: /u02/eirdata/ra/aggregated
+  edr-completed-folder: /u02/eirdata/ra/completed
+ 
+alerts:
+  postUrl: http://127.0.0.1:9504/eir/alert
+  processId: Report Aggregator
+  provisionProcessId: Provisioning Module
+  alerts-mapping:
+    MIS_ALL_DATA_COUNT_IS_ZERO:
+      alertId: ALERT1501
+      message: "Mis all data count is zero for Date & Hour:<DATE_HOUR>"
+    MIS_DATA_NOT_SAVED_FOR_PRIMARY:
+      alertId: ALERT1502
+      message: "Mis not able to saved for Date & Hour:<DATE_HOUR>"
+    MIS_DATA_NOT_SYNCED_WITH_SECONDARY:
+      alertId: ALERT1503
+      message: "Mis data not able to sync with Secondary for Date & Hour:<DATE_HOUR>"
